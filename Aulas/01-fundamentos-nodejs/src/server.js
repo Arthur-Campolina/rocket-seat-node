@@ -7,8 +7,8 @@ const server = http.createServer((request, response) => {
 
     if (method === 'GET' && url === '/users') {
         return response
-        .setHeader('Content-type', 'application/json')
-        .end(JSON.stringify(users))
+            .setHeader('Content-type', 'application/json')
+            .end(JSON.stringify(users))
     }
 
     if (method === 'POST' && url === '/users') {
@@ -18,10 +18,10 @@ const server = http.createServer((request, response) => {
             email: 'jhondoes@gmail.com'
         })
 
-        return response.end('User created')
+        return response.writeHead(201).end("User Created")
     }
 
-    return response.end("NodeJS é muito fod@!")
+    return response.writeHead(404).end("Not Found")
 
 })
 
