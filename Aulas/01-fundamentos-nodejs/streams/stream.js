@@ -1,8 +1,9 @@
-import { Readable } from 'node:stream'
+import { Readable, Writable, Transform } from 'node:stream'
 
 //stdin = tudo que o usuário digita no terminal
 //stdout = tudo que o terminal retorna
 //para testar - node streams/stream.js
+//consigo já trabalhar com o dado (Writable) enquanto o arquivo ainda está sendo lido (Readable)
 
 class OneToHundredStream extends Readable {
     index = 1
@@ -21,6 +22,21 @@ class OneToHundredStream extends Readable {
     }
 }
 
+class InverseSignStream extends Transform {
+    _transform(chunk, encoding, callback) {
+        const transformed = Number(chunk.toString()) * -1
+        callback(null, Buffer.from(String(transformed)))
+    }
+}
+
+class MultiplyByTenStream extends Writable {
+    _write(chunk, encoding, callback) {
+        console.log(Number(chunk.toString()) * 10)
+        callback()
+    }
+}
+
 new OneToHundredStream()
-    .pipe(process.stdout)
+    .pipe(new InverseSignStream())
+    .pipe(new MultiplyByTenStream())
 
