@@ -9,9 +9,9 @@ class InvertNumberSignStream extends Transform {
     }
 }
 
-const server = http.createServer((response, request) => {
+const server = http.createServer(async (response, request) => {
     return request
-        .pipe( new InvertNumberSignStream())
+        .pipe(new InvertNumberSignStream())
         .pipe(response)
 })
 
