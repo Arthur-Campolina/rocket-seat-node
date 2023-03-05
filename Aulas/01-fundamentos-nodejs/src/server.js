@@ -1,28 +1,32 @@
 import http from 'node:http'
-import { json } from './middlewares/json.js'
 
 const users = []
 
-const server = http.createServer(async (request, response) => {
-    const { method, url } = request
+const server = http.createServer((req, res) => {
 
-    await json(request, response)
+    const { method, url } = req
 
     if (method === 'GET' && url === '/users') {
-        return response.end(JSON.stringify(users))
-    }
-
-    if (method === 'POST' && url === '/users') {
-        users.push({
+        return res
+            .setHeader('Content-type', 'application/json')
+            .end(JSON.stringify(users))
+    } else if (method === 'POST' && url === '/users') {
+        const user = {
             id: 1,
-            name: 'Jhon Doe',
-            email: 'jhondoes@gmail.com'
-        })
-
-        return response.writeHead(201).end("User Created")
+            name: 'Arthur Campolina',
+            email: 'arthurcampolina@hotmail.com',
+        }
+        users.push(user)
+        return res.writeHead(201)
+    } else if (method === 'PUT' && url === '/users') {
+        return res.end('Update user')
+    } else if (method === 'PATCH' && url === '/users') {
+        return res.end('Update user')
+    } else if (method === 'DELETE' && url === '/users') {
+        return res.end('Delete user')
+    } else {
+        return res.writeHead(404).end('Not found!')
     }
-
-    return response.writeHead(404).end("Not Found")
 
 })
 

@@ -4,6 +4,8 @@ import { Readable, Writable, Transform } from 'node:stream'
 //stdout = tudo que o terminal retorna
 //para testar - node streams/stream.js
 //consigo já trabalhar com o dado (Writable) enquanto o arquivo ainda está sendo lido (Readable)
+//readable, writable e transform tem metodos obrigatórios. ex: readable => metodo obrigatório _read() {}
+
 
 class OneToHundredStream extends Readable {
     index = 1
@@ -18,14 +20,15 @@ class OneToHundredStream extends Readable {
                 const buff = Buffer.from(String(i))
                 this.push(buff)
             }
-        }, 1000);
+        }, 1000)
     }
 }
 
-class InvertNumberSignStream extends Transform {
+class NegativeNumberStream extends Transform {
     _transform(chunk, encoding, callback) {
-        const transformed = Number(chunk.toString()) * -1
-        callback(null, Buffer.from(String(transformed)))
+        const number = Number(chunk.toString())
+        const negativeNumber = number * -1
+        callback(null, Buffer.from(String(negativeNumber)))
     }
 }
 
@@ -37,6 +40,5 @@ class MultiplyByTenStream extends Writable {
 }
 
 new OneToHundredStream()
-    .pipe(new InvertNumberSignStream())
-    .pipe(new MultiplyByTenStream())
-
+    .pipe(new NegativeNumberStream)
+    .pipe(new MultiplyByTenStream)
