@@ -32,4 +32,31 @@ export class Database {
         this.#persist()
         return data
     }
+
+    // update(table, data) {
+    //     const uuid = data.randomUUID
+    //     if (Array.isArray(this.#database[table])) {
+    //         const all = select(table)
+    //         for (const item in all) {
+    //             if (item.randomUUID === uuid) {
+
+    //             }
+    //         }
+    //     }
+    // }
+
+    delete(table, data) {
+        if (table === 'users') {
+            const userID = data.id
+            if (Array.isArray(this.#database[table])) {
+                const users = select(table)
+                for (const user in users) {
+                    if (user.id === userID) {
+                        this.#database[table].delete(user)
+                    }
+                }
+            }
+        }
+        return data
+    }
 }
