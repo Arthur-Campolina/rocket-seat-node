@@ -1,12 +1,13 @@
 import { randomUUID } from 'node:crypto'
 import { Database } from './database.js'
+import { buildRoutePath } from './utils/buildRoutePath.js'
 
 const database = new Database()
 
 export const routes = [
     {
         method: 'GET',
-        path: '/users',
+        path: buildRoutePath('/users'),
         handler: (req, res) => {
             const users = database.select('users')
             if (users) {
@@ -19,39 +20,43 @@ export const routes = [
     },
     {
         method: 'POST',
-        path: '/users',
+        path: buildRoutePath('/users'),
         handler: (req, res) => {
             const { name, email } = req.body
             const users = database.select('users')
-            for (const user in users)
-                if (user.email === email) {
-                    return res.writeHead('User already exists!', email)
-                }
+
+            const emailExist = users.find(u => {
+                return u.email === email
+            })
+            if (emailExist) {
+                return res.writeHead(200).end(`User already exists! email: ${email}`)
+            }
 
             const user = {
-                id: randomUUID,
+                id: randomUUID(),
                 name: name,
                 email: email
             }
             database.insert('users', user)
-            res.writeHead(201).end(JSON.stringify(user))
+            return res.writeHead(201).end(`New user created! id: ${user.id}`)
         }
     },
     {
         method: 'DELETE',
-        path: 'users/:id',
+        path: buildRoutePath('/users/:id'),
         handler: (req, res) => {
-            const { id } = req.param
+            const { id } = req.params
             const users = database.select('users')
-            if (users) {
-                for (const user in users) {
-                    if (user.id === id) {
-                        database.delete('users', user)
-                        return res.writeHead(200).end('User deleted!', JSON.stringify(id))
-                    }
-                }
+
+            const idExists = users.find(u => {
+                return u.id === id
+            })
+            if (!idExists) {
+                return res.writeHead(404).end(`User not found! id: ${id}`)
             }
-            res.writeHead(404).end('User not found!', JSON.stringify(id))
+
+            database.delete('users', id)
+            return res.writeHead(204).end()
         }
     }
 ]

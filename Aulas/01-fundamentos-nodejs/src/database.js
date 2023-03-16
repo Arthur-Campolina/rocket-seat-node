@@ -45,18 +45,15 @@ export class Database {
     //     }
     // }
 
-    delete(table, data) {
+    delete(table, id) {
         if (table === 'users') {
-            const userID = data.id
             if (Array.isArray(this.#database[table])) {
-                const users = select(table)
-                for (const user in users) {
-                    if (user.id === userID) {
-                        this.#database[table].delete(user)
-                    }
+                const rowIndex = this.#database[table].findIndex(row => row.id === id)
+                if (rowIndex > -1) {
+                    this.#database[table].splice(rowIndex, 1)
+                    this.#persist()
                 }
             }
         }
-        return data
     }
 }
