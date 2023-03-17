@@ -18,12 +18,21 @@ export class Database {
         fs.writeFile('db.json', JSON.stringify(this.#database))
     }
 
-    select(table) {
+    getAll(table) {
         const data = this.#database[table] ?? []
         return data
     }
 
-    insert(table, data) {
+    getByID(table, id) {
+        const rowIndex = this.#database[table].findIndex(row => row.id === id)
+        if (rowIndex > -1) {
+            const user = this.#database[table][rowIndex]
+            return user
+        }
+        return ""
+    }
+
+    create(table, data) {
         if (Array.isArray(this.#database[table])) {
             this.#database[table].push(data)
         } else {
@@ -33,17 +42,13 @@ export class Database {
         return data
     }
 
-    // update(table, data) {
-    //     const uuid = data.randomUUID
-    //     if (Array.isArray(this.#database[table])) {
-    //         const all = select(table)
-    //         for (const item in all) {
-    //             if (item.randomUUID === uuid) {
-
-    //             }
-    //         }
-    //     }
-    // }
+    update(table, id, data) {
+        const rowIndex = this.#database[table].findIndex(row => row.id === id)
+        if (rowIndex > -1) {
+            this.#database[table][rowIndex] = { id, ...data }
+            this.#persist()
+        }
+    }
 
     delete(table, id) {
         if (table === 'users') {

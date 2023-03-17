@@ -9,7 +9,7 @@ export const routes = [
         method: 'GET',
         path: buildRoutePath('/users'),
         handler: (req, res) => {
-            const users = database.select('users')
+            const users = database.getAll('users')
             if (users) {
                 return res.end(JSON.stringify(users))
             } else {
@@ -23,7 +23,7 @@ export const routes = [
         path: buildRoutePath('/users'),
         handler: (req, res) => {
             const { name, email } = req.body
-            const users = database.select('users')
+            const users = database.getAll('users')
 
             const emailExist = users.find(u => {
                 return u.email === email
@@ -42,11 +42,30 @@ export const routes = [
         }
     },
     {
+        method: 'PUT',
+        path: buildRoutePath('/users/:id'),
+        handler: (req, res) => {
+            const { id } = req.params
+            const { name, email } = req.body
+            const user = database.getByID('users', id)
+
+            if (!user) {
+                return res.writeHead(404).end(`User not found! id: ${id}`)
+            }
+
+            database.update('users', id, {
+                name,
+                email
+            })
+            return res.writeHead(204).end(`User updated! id: ${id}`)
+        }
+    },
+    {
         method: 'DELETE',
         path: buildRoutePath('/users/:id'),
         handler: (req, res) => {
             const { id } = req.params
-            const users = database.select('users')
+            const users = database.getAll('users')
 
             const idExists = users.find(u => {
                 return u.id === id
