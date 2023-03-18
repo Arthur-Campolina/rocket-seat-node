@@ -8,18 +8,25 @@ export class Database {
     constructor() {
         fs.readFile(databasePath, 'utf8').then(data => {
             this.#database = JSON.parse(data)
+        }).catch(() => {
+            this.#persist()
         })
-            .catch(() => {
-                this.#persist()
-            })
     }
 
     #persist() {
         fs.writeFile('db.json', JSON.stringify(this.#database))
     }
 
-    getAll(table) {
-        const data = this.#database[table] ?? []
+    getAll(table, search) {
+        let data = this.#database[table] ?? []
+        if (search) {
+            data = data.filter(row => {
+                //Object.entries(search) => search = {name: "nome passado", email: "nome passado"} => convertido em [['name', 'nome passado'], ['email', 'nome passado']]
+                return Object.entries(search).some(([key, value]) => {
+                    return row[key].toLowerCase().includes((value).toLowerCase())
+                })
+            })
+        }
         return data
     }
 
