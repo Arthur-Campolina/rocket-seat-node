@@ -23,10 +23,16 @@ export class Database {
         const data = this.#database[table] ?? []
         return data
     }
-    // getById(table, id) {
-
-    // }
+    getById(table, id) {
+        const rowIndex = this.#database[table].findIndex((row) => row.id === id)
+        if (rowIndex > -1) {
+            const task = this.#database[table][rowIndex]
+            return task
+        }
+        return null
+    }
     create(table, data) {
+        //validar criação de dados para tudo upper case
         if (Array.isArray(this.#database[table])) {
             this.#database[table].push(data)
         } else {
@@ -37,9 +43,14 @@ export class Database {
         return data
     }
     // update(table, id, data) {
-
-    // }
-    // delete(table, id) {
-
-    // }
+    delete(table, id) {
+        if (Array.isArray(this.#database[table])) {
+            const rowIndex = this.#database[table].findIndex(row => row.id === id)
+            if (rowIndex > -1) {
+                this.#database[table].splice(rowIndex, 1)
+                this.#persist()
+            }
+            return null
+        }
+    }
 }
