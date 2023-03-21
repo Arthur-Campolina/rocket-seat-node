@@ -34,15 +34,42 @@ export class Database {
     create(table, data) {
         //validar criação de dados para tudo upper case
         if (Array.isArray(this.#database[table])) {
+            const title = data.title.toUpperCase().trim()
+            const description = data.description.toUpperCase().trim()
+            data.title = title
+            data.description = description
             this.#database[table].push(data)
         } else {
             this.#database[table] = []
+            const title = data.title.toUpperCase().trim()
+            const description = data.description.toUpperCase().trim()
+            data.title = title
+            data.description = description
             this.#database[table].push(data)
         }
         this.#persist()
         return data
     }
-    // update(table, id, data) {
+
+    update(table, id, data) {
+        if (Array.isArray(this.#database[table])) {
+            const rowIndex = this.#database[table].findIndex((row) => row.id === id)
+            if (rowIndex > -1) {
+                const task = this.#database[table][rowIndex]
+                if (data) {
+                    task.title = data.title ? data.title.toUpperCase() : task.title
+                    task.description = data.description ? data.description.toUpperCase() : task.description
+                    task.updated_at = new Date()
+                    this.#database[table][rowIndex] = task
+                    this.#persist()
+                    return task
+                }
+            }
+        } else {
+            return null
+        }
+    }
+
     delete(table, id) {
         if (Array.isArray(this.#database[table])) {
             const rowIndex = this.#database[table].findIndex(row => row.id === id)
