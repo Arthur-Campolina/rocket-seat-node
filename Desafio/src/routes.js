@@ -81,13 +81,31 @@ export const routes = [
             return res.writeHead(200).end(JSON.stringify(updatedTask))
         }
     },
-    // {
-    //     method: 'PATCH',
-    //     path: buildRoutePath('/tasks/:id/complete'),
-    //     handler: (req, res) => {
+    {
+        method: 'PATCH',
+        path: buildRoutePath('/tasks/:id/complete'),
+        handler: (req, res) => {
+            if (!req.params.id) return res.writeHead(200).end(`No id found!`)
+            const { id } = req.params
+            console.log(id)
+            const task = database.getById('tasks', id)
+            if (task) {
+                if (task.completed_at === null) {
+                    const task = database.completeTask('tasks', id)
+                    const formattedCompletedTaskDate = new Intl.DateTimeFormat(['pt-br', 'id']).format(task.completed_at)
+                    res.writeHead(201).end(`Task ID: ${id} completed on ${formattedCompletedTaskDate}! `)
+                } else {
+                    const task = database.completeTask('tasks', id)
+                    const formattedCompletedTaskDate = new Intl.DateTimeFormat(['pt-br', 'id']).format(task.completed_at)
+                    return res.writeHead(200).end(`Task ID: ${id} already completed on ${formattedCompletedTaskDate}`)
+                    //new Intl.DateTimeFormat(['ban', 'id']).format(date)
+                }
+            } else {
+                return res.writeHead(404).end(`Task not found! ID: ${id}`)
+            }
 
-    //     }
-    // },
+        }
+    },
     {
         method: 'DELETE',
         path: buildRoutePath('/tasks/:id'),
@@ -99,7 +117,7 @@ export const routes = [
                 database.delete('tasks', id)
                 return res.writeHead(200).end()
             }
-            return res.writeHead(404).end(`Task not found! ID: ${task.id}`)
+            return res.writeHead(404).end(`Task not found! ID: ${id}`)
         }
     },
 ]

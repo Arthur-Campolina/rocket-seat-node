@@ -4,7 +4,7 @@
       "id": "19dd9be6-aaff-4014-b00a-e4afb4916fcf",
       "title": "WORK OUT",
       "description": "3X A WEEK",
-      "completed_at": null,
+      "completed_at": "2023-03-22T01:03:32.572Z",
       "created_at": "2023-03-21T00:53:01.783Z",
       "updated_at": null
     },
@@ -12,9 +12,17 @@
       "id": "77f6a83c-17b4-4902-abf3-6e771c5823e7",
       "title": "STUDY",
       "description": "3X A WEEK",
-      "completed_at": null,
+      "completed_at": "2023-03-22T01:02:22.454Z",
       "created_at": "2023-03-21T00:58:57.931Z",
-      "updated_at": "2023-03-21T01:41:09.098Z"
+      "updated_at": "2023-03-22T01:05:15.366Z"
+    },
+    {
+      "id": "5ec5e2db-93be-4b19-b2b2-ed0bcd18b409",
+      "title": "READ",
+      "description": "3X A WEEK",
+      "completed_at": null,
+      "created_at": "2023-03-22T01:04:44.623Z",
+      "updated_at": null
     }
   ]
 }

@@ -70,6 +70,23 @@ export class Database {
         }
     }
 
+    completeTask(table, id) {
+        if (Array.isArray(this.#database[table])) {
+            const rowIndex = this.#database[table].findIndex(row => row.id === id)
+            if (rowIndex > -1) {
+                const task = this.#database[table][rowIndex]
+                if (task.completed_at === null) {
+                    task.completed_at = new Date()
+                    this.#persist()
+                    return task
+                }
+                else {
+                    return task
+                }
+            }
+        }
+    }
+
     delete(table, id) {
         if (Array.isArray(this.#database[table])) {
             const rowIndex = this.#database[table].findIndex(row => row.id === id)
