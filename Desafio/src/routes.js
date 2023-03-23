@@ -1,6 +1,7 @@
 import { Database } from './database.js'
 import { randomUUID } from 'node:crypto'
 import { buildRoutePath } from './utils/buildRoutePath.js'
+import { csvParser } from './utils/csvParser.js'
 
 const database = new Database()
 
@@ -29,25 +30,32 @@ export const routes = [
     {
         method: 'POST',
         path: buildRoutePath('/tasks'),
-        handler: (req, res) => {
-            const { title, description } = req.body
-            const tasks = database.getAll('tasks')
-            const taskExist = tasks.find((t) => {
-                return t.title === title.toUpperCase().trim()
-            })
-            if (taskExist) {
-                return res.writeHead(200).end(`Task already exists! Title: ${title}`)
+        handler: async (req, res) => {
+
+            // if (!req.body.title && !req.body.description) return res.writeHead(200).end(`No params found!`)
+            // const { title, description } = req.body
+            // const tasks = database.getAll('tasks')
+            // const taskExist = tasks.find((t) => {
+            //     return t.title === title.toUpperCase().trim()
+            // })
+            // if (taskExist) {
+            //     return res.writeHead(200).end(`Task already exists! Title: ${title}`)
+            // }
+            // const task = {
+            //     id: randomUUID(),
+            //     title: title,
+            //     description: description,
+            //     completed_at: null,
+            //     created_at: new Date(),
+            //     updated_at: null,
+            // }
+            // database.create('tasks', task)
+            const tasks = await csvParser()
+            for (const task of tasks) {
+                await database.create('tasks', task)
+                console.log(`Inserted a row with the id: ${task.id}`)
             }
-            const task = {
-                id: randomUUID(),
-                title: title,
-                description: description,
-                completed_at: null,
-                created_at: new Date(),
-                updated_at: null,
-            }
-            database.create('tasks', task)
-            return res.writeHead(201).end(`New task created! ID: ${task.id}`)
+            return res.writeHead(201).end()
         }
     },
     {
