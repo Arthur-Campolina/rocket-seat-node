@@ -31,33 +31,41 @@ export const routes = [
         method: 'POST',
         path: buildRoutePath('/tasks'),
         handler: async (req, res) => {
-
-            // if (!req.body.title && !req.body.description) return res.writeHead(200).end(`No params found!`)
-            // const { title, description } = req.body
-            // const tasks = database.getAll('tasks')
-            // const taskExist = tasks.find((t) => {
-            //     return t.title === title.toUpperCase().trim()
-            // })
-            // if (taskExist) {
-            //     return res.writeHead(200).end(`Task already exists! Title: ${title}`)
-            // }
-            // const task = {
-            //     id: randomUUID(),
-            //     title: title,
-            //     description: description,
-            //     completed_at: null,
-            //     created_at: new Date(),
-            //     updated_at: null,
-            // }
-            // database.create('tasks', task)
-            const tasks = await csvParser()
-            for (const task of tasks) {
-                await database.create('tasks', task)
-                console.log(`Inserted a row with the id: ${task.id}`)
+            if (!req.headers) return res.writeHead(200).end(`No headers found!`)
+            const contentType = Object.entries(req.headers).at(0).reduce(function (key, value) {
+                const string = value.toString()
+                return string
+            })
+            if (contentType !== 'multipart/form-data') {
+                if (!req.body.title && !req.body.description) return res.writeHead(200).end(`No params found!`)
+                const { title, description } = req.body
+                const tasks = database.getAll('tasks')
+                const taskExist = tasks.find((t) => {
+                    return t.title === title.toUpperCase().trim()
+                })
+                if (taskExist) {
+                    return res.writeHead(200).end(`Task already exists! Title: ${title}`)
+                }
+                const task = {
+                    id: randomUUID(),
+                    title: title,
+                    description: description,
+                    completed_at: null,
+                    created_at: new Date(),
+                    updated_at: null,
+                }
+                return res.writeHead(201).end(task)
+            } else {
+                const tasks = await csvParser()
+                for (const task of tasks) {
+                    await database.create('tasks', task)
+                    console.log(`Inserted a row with the id: ${task.id}`)
+                }
+                return res.writeHead(201).end(JSON.stringify(tasks))
             }
-            return res.writeHead(201).end()
         }
     },
+
     {
         method: 'PUT',
         path: buildRoutePath('/tasks/:id'),
