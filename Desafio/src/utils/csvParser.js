@@ -28,7 +28,6 @@ export function csvParser() {
     const writeData = new Writable({
         write(chunk, encoding, callback) {
             const string = chunk.toString()
-            console.log(string)
             const data = JSON.parse(string)
             tasks.push(data)
             callback(null, JSON.stringify(data))

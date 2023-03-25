@@ -43,7 +43,7 @@ export const routes = [
                 const taskExist = tasks.find((t) => {
                     return t.title === title.toUpperCase().trim()
                 })
-                if (taskExist) {
+                if (taskExist !== undefined) {
                     return res.writeHead(200).end(`Task already exists! Title: ${title}`)
                 }
                 const task = {
@@ -54,14 +54,29 @@ export const routes = [
                     created_at: new Date(),
                     updated_at: null,
                 }
-                return res.writeHead(201).end(task)
+                database.create('tasks', task)
+                return res.writeHead(201).end(JSON.stringify(task))
             } else {
                 const tasks = await csvParser()
+                const tasksInDatabase = database.getAll('tasks')
+                const tasksToPersist = []
                 for (const task of tasks) {
-                    await database.create('tasks', task)
-                    console.log(`Inserted a row with the id: ${task.id}`)
+                    const { title } = task
+                    const taskExist = tasksInDatabase.find((t) => {
+                        return t.title === title.toUpperCase().trim()
+                    })
+                    if (taskExist !== undefined) {
+                        console.log(`Task already exists! Title: ${title}`)
+                    } else {
+                        tasksToPersist.push(task)
+                        console.log(`Task not existent in the database! Title: ${title}`)
+                    }
                 }
-                return res.writeHead(201).end(JSON.stringify(tasks))
+                for (const taskToPersist of tasksToPersist) {
+                    database.create('tasks', taskToPersist)
+                    console.log(`Task persisted! Title: ${taskToPersist.title}`)
+                }
+                return res.writeHead(201).end(tasksToPersist.length === 0 ? 'All tasks already exist!' : JSON.stringify(tasksToPersist))
             }
         }
     },
@@ -72,29 +87,17 @@ export const routes = [
         handler: (req, res) => {
             if (!req.params.id) return res.writeHead(200).end(`No id found!`)
             if (!req.body.title && !req.body.description) return res.writeHead(200).end(`No params found!`)
+            const { title, description } = req.body
             const { id } = req.params
             const task = database.getById('tasks', id)
-            if (!req.body.title) {
-                if (task) {
-                    const { description } = req.body
-                    const updatedTask = database.update('tasks', id, description)
-                    return res.writeHead(200).end(JSON.stringify(updatedTask))
-                } else {
-                    return res.writeHead(200).end(`Task not found! ID: ${id}`)
-                }
+            if (task) {
+                task.title = title
+                task.description = description
+                const updatedTask = database.update('tasks', id, task)
+                return res.writeHead(200).end(JSON.stringify(updatedTask))
+            } else {
+                return res.writeHead(200).end(`Task not found! ID: ${id} `)
             }
-            if (!req.body.description) {
-                if (task) {
-                    const { title } = req.body
-                    const updatedTask = database.update('tasks', id, title)
-                    return res.writeHead(200).end(JSON.stringify(updatedTask))
-                } else {
-                    return res.writeHead(200).end(`Task not found! ID: ${id}`)
-                }
-            }
-            const data = req.body
-            const updatedTask = database.update('tasks', id, data)
-            return res.writeHead(200).end(JSON.stringify(updatedTask))
         }
     },
     {
@@ -103,21 +106,19 @@ export const routes = [
         handler: (req, res) => {
             if (!req.params.id) return res.writeHead(200).end(`No id found!`)
             const { id } = req.params
-            console.log(id)
             const task = database.getById('tasks', id)
             if (task) {
                 if (task.completed_at === null) {
                     const task = database.completeTask('tasks', id)
                     const formattedCompletedTaskDate = new Intl.DateTimeFormat(['pt-br', 'id']).format(task.completed_at)
-                    res.writeHead(201).end(`Task ID: ${id} completed on ${formattedCompletedTaskDate}! `)
+                    res.writeHead(201).end(`Task ID: ${id} completed on ${formattedCompletedTaskDate} ! `)
                 } else {
                     const task = database.completeTask('tasks', id)
                     const formattedCompletedTaskDate = new Intl.DateTimeFormat(['pt-br', 'id']).format(task.completed_at)
-                    return res.writeHead(200).end(`Task ID: ${id} already completed on ${formattedCompletedTaskDate}`)
-                    //new Intl.DateTimeFormat(['ban', 'id']).format(date)
+                    return res.writeHead(200).end(`Task ID: ${id} already completed on ${formattedCompletedTaskDate} `)
                 }
             } else {
-                return res.writeHead(404).end(`Task not found! ID: ${id}`)
+                return res.writeHead(404).end(`Task not found! ID: ${id} `)
             }
 
         }
@@ -133,7 +134,7 @@ export const routes = [
                 database.delete('tasks', id)
                 return res.writeHead(200).end()
             }
-            return res.writeHead(404).end(`Task not found! ID: ${id}`)
+            return res.writeHead(404).end(`Task not found! ID: ${id} `)
         }
     },
 ]
