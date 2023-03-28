@@ -1,0 +1,22 @@
+{
+  "name": "02-api-rest-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx tsx watch src/server.ts",
+    "Lint": "eslint src --ext .ts --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rocketseat/eslint-config": "^1.2.0",
+    "@types/node": "^18.15.10",
+    "eslint": "^8.36.0",
+    "typescript": "^5.0.2"
+  },
+  "dependencies": {
+    "fastify": "^4.15.0"
+  }
+}
