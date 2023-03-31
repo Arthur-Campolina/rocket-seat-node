@@ -1,16 +1,17 @@
 import fastify from 'fastify'
 import { knex } from './database'
+import { env } from './env'
 
 const app = fastify()
 
-app.get('/task', async () => {
-  const tables = await knex('sqlite_schema').select('*')
-  return tables
+app.get('/transactions', async () => {
+  const transactions = await knex('transactions').select('*')
+  return transactions
 })
 
 app
   .listen({
-    port: 3333,
+    port: env.PORT,
   })
   .then(() => {
     console.log('Server running on port 3333')
