@@ -1,7 +1,7 @@
 import { FastifyRequest } from 'fastify'
 import { z } from 'zod'
 
-export function bodyZType(req: FastifyRequest) {
+export function transactionBodyZType(req: FastifyRequest) {
     const createZTransactionBodySchema = z.object({
         title: z.string(),
         amount: z.number(),

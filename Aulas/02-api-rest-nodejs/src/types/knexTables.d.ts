@@ -7,7 +7,12 @@ export module 'knex/types/tables' {
             title: string
             amount: number
             created_at: string
-            sessions_id?: string
+            session_id?: string
+        },
+        users: {
+            id: string
+            name: string
+            email: string
         }
     }
 }
