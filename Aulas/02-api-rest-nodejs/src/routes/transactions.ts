@@ -38,7 +38,9 @@ export async function transactionRoutes(app: FastifyInstance) {
         const totalAmount = await knex('transactions').where('session_id', sessionId).sum('amount', {
             as: 'totalAmount'
         }).first()
-        return rep.status(200).send(totalAmount)
+        return rep.status(200).send({
+            totalAmount,
+        })
     })
 
     app.post('/', async (req, rep) => {
