@@ -1,0 +1,20 @@
+{
+  "name": "desafio2",
+  "version": "1.0.0",
+  "description": "esse desafio desenvolveremos uma API para controle de dieta diária, a Daily Diet API.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "typescript": "^5.0.3"
+  },
+  "dependencies": {
+    "fastify": "^4.15.0",
+    "tsx": "^3.12.6"
+  }
+}
