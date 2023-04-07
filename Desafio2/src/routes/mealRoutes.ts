@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
 
-export async function userRoutes(app: FastifyInstance) {
+export async function mealRoutes(app: FastifyInstance) {
 
     app.get('/', (request, reply) => {
         console.log('GET USERS!')

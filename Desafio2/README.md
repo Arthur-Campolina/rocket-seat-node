@@ -30,12 +30,12 @@ esse desafio desenvolveremos uma API para controle de dieta diária, a Daily Die
 
 USER
 
-- [ ] CREATE (POST) um user
-- [ ] GET (GET) todos users
+- [x] CREATE (POST) um user
+- [x] GET (GET) todos users (somente admin)
 - [ ] GET (GET) um user por ID
 - [ ] DELETE (DELETE) um user por ID
 - [ ] UPDATE (PUT) um user por ID
-- [x] User: id, session_id, name, email, created_at, updated_at
+- [x] User: id, session_id, name, email, type[admin, user],created_at, updated_at
 
 MEAL
 
