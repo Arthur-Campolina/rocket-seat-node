@@ -32,8 +32,8 @@ USER
 
 - [x] CREATE (POST) um user
 - [x] GET (GET) todos users (somente admin)
-- [ ] GET (GET) um user por ID
-- [ ] DELETE (DELETE) um user por ID
+- [x] GET (GET) um user por ID (validando se o session_id bate com o que tá fazendo a requisição ou é admin)
+- [x] DELETE (DELETE) um user por ID (validando se o session_id bate com o que tá fazendo a requisição ou é admin)
 - [ ] UPDATE (PUT) um user por ID
 - [x] User: id, session_id, name, email, type[admin, user],created_at, updated_at
 

@@ -3,14 +3,34 @@ import { knex } from '../database'
 import { requestBodyUser } from '../types/requestBodyUser'
 import { randomUUID } from 'node:crypto'
 import { isAdmin } from '../middlewares/isAdmin'
+import { requestParamsId } from '../types/requestParamsId'
 
 export async function userRoutes(app: FastifyInstance) {
 
-    app.get('/:id', { preHandler: isAdmin }, async (request, reply) => {
+    app.get('/all/:id', { preHandler: isAdmin }, async (request, reply) => {
         const users = await knex('users').select('*')
         return reply.status(200).send({
             users,
         })
+    })
+
+    app.get('/:id', async (request, reply) => {
+        // [] session id do user = ao session id do user do banco?
+        const id = requestParamsId(request)
+        const sessionId = request.cookies.sessionId
+        if (sessionId === undefined) return reply.status(400).send('Unauthorized!')
+        const user = await knex('users').where('id', id).first()
+        if (user === undefined) return reply.status(400).send(`User not found! ID: ${id}`)
+        if (user.session_id === undefined) return reply
+            .status(400)
+            .send(`There's a problem with this user! ID: ${id}`)
+        if (user.session_id === sessionId || user.type === 'admin') {
+            return reply.status(200).send({
+                user,
+            })
+        } else {
+            return reply.status(400).send('Unauthorized!')
+        }
     })
 
     app.post('/', async (request, reply) => {
@@ -42,14 +62,20 @@ export async function userRoutes(app: FastifyInstance) {
         return reply.status(200).send('PUT USERS!')
     })
 
-    app.patch('/', (request, reply) => {
-        console.log('PATCH USERS!')
-        return reply.status(200).send('PATCH USERS!')
+    app.delete('/:id', async (request, reply) => {
+        const id = requestParamsId(request)
+        const sessionId = request.cookies.sessionId
+        if (sessionId === undefined) return reply.status(400).send('Unauthorized!')
+        const user = await knex('users').where('id', id).first()
+        if (user === undefined) return reply.status(400).send(`User not found! ID: ${id}`)
+        if (user.session_id === undefined) return reply
+            .status(400)
+            .send(`There's a problem with this user! ID: ${id}`)
+        if (user.session_id === sessionId || user.type === 'admin') {
+            await knex('users').where('id', id).delete('*')
+            return reply.status(200).send()
+        } else {
+            return reply.status(400).send('Unauthorized!')
+        }
     })
-
-    app.delete('/', (request, reply) => {
-        console.log('DELETE USERS!')
-        return reply.status(200).send('DELETE USERS!')
-    })
-
 }

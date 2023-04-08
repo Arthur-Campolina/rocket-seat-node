@@ -7,7 +7,8 @@ export async function isAdmin(request: FastifyRequest, reply: FastifyReply) {
     const id = requestParamsId(request)
     if (!id) return reply.status(400).send({ error: 'Unautorized!' })
     const user = await knex('users').where('id', id).first()
-    if (user === undefined) return reply.status(400).send({ error: 'Unautorized!' })
+    if (user === undefined) return reply.status(400).send(`User not found! ID: ${id}`)
     const isUserAdmin = user.type === 'admin'
     if (isUserAdmin === false) return reply.status(400).send({ error: 'Unautorized!' })
+    return
 }
