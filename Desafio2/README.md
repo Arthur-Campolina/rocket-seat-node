@@ -34,13 +34,14 @@ USER
 - [x] GET (GET) todos users (somente admin)
 - [x] GET (GET) um user por ID (validando se o session_id bate com o que tá fazendo a requisição ou é admin)
 - [x] DELETE (DELETE) um user por ID (validando se o session_id bate com o que tá fazendo a requisição ou é admin)
-- [ ] UPDATE (PUT) um user por ID
+- [x] UPDATE (PUT) um user por ID
 - [x] User: id, session_id, name, email, type[admin, user],created_at, updated_at
 
 MEAL
 
-- [ ] CREATE (POST) uma meal
-- [ ] GET (GET) todos meals
+- [x] CREATE (POST) uma meal (junto cria usermeal)
+- [x] GET (GET) todos meals (somente admin)
+- [ ] GET (GET) todos meals (validando se o session_id bate com o que tá fazendo a requisição ou é admin)
 - [ ] GET (GET) uma meal por ID
 - [ ] DELETE (DELETE) uma meal por ID
 - [ ] UPDATE (PUT) uma meal por ID
@@ -48,7 +49,7 @@ MEAL
 
 USERMEALS
 
-- [ ] CREATE (POST) uma userMeal
+- [x] CREATE (POST) uma userMeal
 - [ ] GET (GET) todos userMeals por userId
 - [ ] GET (GET) userMeal unica por userId
 - [ ] DELETE (DELETE) uma userMeal por ID

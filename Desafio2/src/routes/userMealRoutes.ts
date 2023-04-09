@@ -1,10 +1,14 @@
 import { FastifyInstance } from 'fastify'
+import { knex } from '../database'
 
 export async function userMealRoutes(app: FastifyInstance) {
 
-    app.get('/', (request, reply) => {
-        console.log('GET USERS!')
-        return reply.status(200).send('GET USERS!')
+    app.get('/', async (request, reply) => {
+        const userMeals = await knex('userMeals')
+            .select('*')
+        return reply.status(200).send({
+            userMeals,
+        })
     })
 
     app.post('/', (request, reply) => {

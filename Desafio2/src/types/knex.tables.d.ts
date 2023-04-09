@@ -12,15 +12,15 @@ declare module 'knex/types/tables' {
             updated_at?: string
         },
         meals: {
-            id: string
+            id: string,
             name: string,
-            caloriesQuantity: string
-            carbsQuantity: string
-            proteinQuantity: string
-            fatQuantity: string
+            caloriesQuantity: number,
+            carbsQuantity: number,
+            proteinQuantity: number,
+            fatQuantity: number,
             trafficLight: string
             created_at: string
-            updated_at: string
+            updated_at?: string
         },
         userMeals: {
             id: string
