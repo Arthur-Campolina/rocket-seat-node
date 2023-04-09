@@ -15,15 +15,16 @@ export async function userRoutes(app: FastifyInstance) {
     })
 
     app.get('/:id', async (request, reply) => {
-        // [] session id do user = ao session id do user do banco?
         const id = requestParamsId(request)
         const sessionId = request.cookies.sessionId
         if (sessionId === undefined) return reply.status(400).send('Unauthorized!')
-        const user = await knex('users').where('id', id).first()
+        const user = await knex('users')
+            .where({
+                id: id,
+                session_id: sessionId,
+            })
+            .first()
         if (user === undefined) return reply.status(400).send(`User not found! ID: ${id}`)
-        if (user.session_id === undefined) return reply
-            .status(400)
-            .send(`There's a problem with this user! ID: ${id}`)
         if (user.session_id === sessionId || user.type === 'admin') {
             return reply.status(200).send({
                 user,
@@ -45,32 +46,62 @@ export async function userRoutes(app: FastifyInstance) {
                 maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
             })
         }
-        const user = await knex('users').insert({
-            id: randomUUID(),
-            name: body.name,
-            email: body.email,
-            type: body.type ? body.type : 'user',
-            session_id: sessionId,
-        }).returning('*')
+        const user = await knex('users')
+            .insert({
+                id: randomUUID(),
+                name: body.name,
+                email: body.email,
+                type: body.type ? body.type : 'user',
+                session_id: sessionId,
+            })
+            .returning('*')
         return reply.status(201).send({
             user,
         })
     })
 
-    app.put('/', (request, reply) => {
-        console.log('PUT USERS!')
-        return reply.status(200).send('PUT USERS!')
+    app.put('/:id', async (request, reply) => {
+        if (!request.body) return reply.status(400).send('No request body found!')
+        const id = requestParamsId(request)
+        const sessionId = request.cookies.sessionId
+        if (sessionId === undefined) return reply.status(400).send('Unauthorized!')
+        const user = await knex('users')
+            .where({
+                id: id,
+                session_id: sessionId,
+            })
+            .first()
+        if (user === undefined) return reply.status(400).send(`User not found! ID: ${id}`)
+        if (user.session_id === sessionId || user.type === 'admin') {
+            const { name, email, type } = requestBodyUser(request)
+            const updatedUser = await knex('users')
+                .where('id', id)
+                .update({
+                    name,
+                    email,
+                    type,
+                    updated_at: knex.fn.now()
+                })
+                .returning('*')
+            return reply.status(200).send({
+                updatedUser,
+            })
+        } else {
+            return reply.status(400).send('Unauthorized!')
+        }
     })
 
     app.delete('/:id', async (request, reply) => {
         const id = requestParamsId(request)
         const sessionId = request.cookies.sessionId
         if (sessionId === undefined) return reply.status(400).send('Unauthorized!')
-        const user = await knex('users').where('id', id).first()
+        const user = await knex('users')
+            .where({
+                id: id,
+                session_id: sessionId,
+            })
+            .first()
         if (user === undefined) return reply.status(400).send(`User not found! ID: ${id}`)
-        if (user.session_id === undefined) return reply
-            .status(400)
-            .send(`There's a problem with this user! ID: ${id}`)
         if (user.session_id === sessionId || user.type === 'admin') {
             await knex('users').where('id', id).delete('*')
             return reply.status(200).send()
