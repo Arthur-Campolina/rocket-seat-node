@@ -4,6 +4,7 @@ import { knex } from '../database'
 import { randomUUID } from 'node:crypto'
 import { isAdmin } from '../middlewares/isAdmin'
 import { requestParamsId } from '../types/requestParamsId'
+import { isThereSessionId } from '../middlewares/isThereSessionId'
 
 export async function mealRoutes(app: FastifyInstance) {
 
@@ -16,10 +17,8 @@ export async function mealRoutes(app: FastifyInstance) {
         })
     })
 
-    app.get('/', async (request, reply) => {
+    app.get('/', { preHandler: isThereSessionId }, async (request, reply) => {
         const sessionId = request.cookies.sessionId
-        if (sessionId === undefined) return reply.status(400).send('User not identified!')
-
         const user = await knex('users')
             .where({
                 session_id: sessionId,
@@ -27,9 +26,9 @@ export async function mealRoutes(app: FastifyInstance) {
             .first()
         if (user === undefined) return reply.status(400).send('User not found!')
 
-        // [] retornando vazio => corrigir
         const userId = user.id
-        const meals = await knex.select('meals.*')
+        const meals = await knex
+            .select('meals.*')
             .from('meals')
             .leftJoin('userMeals', function () {
                 this.on('meals.id', '=', 'userMeals.mealId')
@@ -40,10 +39,9 @@ export async function mealRoutes(app: FastifyInstance) {
         return reply.status(200).send(meals)
     })
 
-    app.post('/', async (request, reply) => {
+    app.post('/', { preHandler: isThereSessionId }, async (request, reply) => {
         if (!request.body) return reply.status(400).send('Request body not found!')
         const sessionId = request.cookies.sessionId
-        if (sessionId === undefined) return reply.status(400).send('User not identified!')
         const body = requestBodyMeal(request)
         if (!body) return reply.status(400).send('')
 
@@ -57,6 +55,9 @@ export async function mealRoutes(app: FastifyInstance) {
             .insert({
                 id: randomUUID(),
                 name: body.name.toUpperCase(),
+                description: body.description.toUpperCase(),
+                date: body.date,
+                mealEaten: body.mealEaten,
                 caloriesQuantity: body.caloriesQuantity,
                 carbsQuantity: body.carbsQuantity,
                 proteinQuantity: body.proteinQuantity,
@@ -90,11 +91,10 @@ export async function mealRoutes(app: FastifyInstance) {
     //     return reply.status(200).send('PATCH USERS!')
     // })
 
-    app.delete('/:id', async (request, reply) => {
+    app.delete('/:id', { preHandler: isThereSessionId }, async (request, reply) => {
         if (!request.params) return reply.status(400).send('Request params not found!')
         const mealId = requestParamsId(request)
         const sessionId = request.cookies.sessionId
-        if (sessionId === undefined) return reply.status(400).send('User not identified!')
 
         const user = await knex('users')
             .where({

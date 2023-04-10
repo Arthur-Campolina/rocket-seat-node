@@ -4,6 +4,7 @@ import { requestBodyUser } from '../types/requestBodyUser'
 import { randomUUID } from 'node:crypto'
 import { isAdmin } from '../middlewares/isAdmin'
 import { requestParamsId } from '../types/requestParamsId'
+import { isThereSessionId } from '../middlewares/isThereSessionId'
 
 export async function userRoutes(app: FastifyInstance) {
 
@@ -14,27 +15,22 @@ export async function userRoutes(app: FastifyInstance) {
         })
     })
 
-    app.get('/:id', async (request, reply) => {
+    app.get('/:id', { preHandler: isThereSessionId }, async (request, reply) => {
         const id = requestParamsId(request)
         const sessionId = request.cookies.sessionId
-        if (sessionId === undefined) return reply.status(400).send('Unauthorized!')
         const user = await knex('users')
             .where({
                 id: id,
-                session_id: sessionId,
             })
             .first()
         if (user === undefined) return reply.status(400).send(`User not found! ID: ${id}`)
-        if (user.session_id === sessionId || user.type === 'admin') {
-            return reply.status(200).send({
-                user,
-            })
-        } else {
-            return reply.status(400).send('Unauthorized!')
-        }
+        if (user.session_id !== sessionId || user.type !== 'admin') return reply.status(400).send({ error: 'Unauthorized!' })
+        return reply.status(200).send({
+            user,
+        })
     })
 
-    app.post('/', async (request, reply) => {
+    app.post('/', { preHandler: isAdmin }, async (request, reply) => {
         if (!request) return reply.status(400).send('No request found!')
         const body = requestBodyUser(request)
         if (!body) return reply.status(400).send('No body found!')
@@ -60,11 +56,10 @@ export async function userRoutes(app: FastifyInstance) {
         })
     })
 
-    app.put('/:id', async (request, reply) => {
+    app.put('/:id', { preHandler: isThereSessionId }, async (request, reply) => {
         if (!request.body) return reply.status(400).send('No request body found!')
         const id = requestParamsId(request)
         const sessionId = request.cookies.sessionId
-        if (sessionId === undefined) return reply.status(400).send('Unauthorized!')
         const user = await knex('users')
             .where({
                 id: id,
@@ -91,10 +86,9 @@ export async function userRoutes(app: FastifyInstance) {
         }
     })
 
-    app.delete('/:id', async (request, reply) => {
+    app.delete('/:id', { preHandler: isThereSessionId }, async (request, reply) => {
         const id = requestParamsId(request)
         const sessionId = request.cookies.sessionId
-        if (sessionId === undefined) return reply.status(400).send('Unauthorized!')
         const user = await knex('users')
             .where({
                 id: id,

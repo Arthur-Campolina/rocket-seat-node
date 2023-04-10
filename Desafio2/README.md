@@ -8,16 +8,16 @@ esse desafio desenvolveremos uma API para controle de dieta diária, a Daily Die
 - [ ] Deve ser possível identificar o usuário entre as requisições
 - [ ] Deve ser possível registrar uma refeição feita, com as seguintes informações:
       _As refeições devem ser relacionadas a um usuário._
-  - [ ] Nome
-  - [ ] Descrição
-  - [ ] Data e Hora
-  - [ ] Está dentro ou não da dieta
+  - [x] Nome
+  - [x] Descrição
+  - [x] Data e Hora
+  - [x] Está dentro ou não da dieta - trafficLight
 
 #Regras de Negócio
 
 - [ ] Deve ser possível editar uma refeição, podendo alterar todos os dados acima
-- [ ] Deve ser possível apagar uma refeição
-- [ ] Deve ser possível listar todas as refeições de um usuário
+- [x] Deve ser possível apagar uma refeição
+- [x] Deve ser possível listar todas as refeições de um usuário
 - [ ] Deve ser possível visualizar uma única refeição
 - [ ] Deve ser possível recuperar as métricas de um usuário
   - [ ] Quantidade total de refeições registradas
@@ -41,18 +41,19 @@ MEAL
 
 - [x] CREATE (POST) uma meal (junto cria usermeal)
 - [x] GET (GET) todos meals (somente admin)
-- [ ] GET (GET) todos meals (validando se o session_id bate com o que tá fazendo a requisição ou é admin)
+- [x] GET (GET) todos meals (validando se o session_id bate com o que tá fazendo a requisição ou é admin)
 - [ ] GET (GET) uma meal por ID
 - [ ] DELETE (DELETE) uma meal por ID
 - [ ] UPDATE (PUT) uma meal por ID
-- [x] Meal: id, name, caloriesQtt, carbsQtt, proteinQtt, fatQtt, trafficLight[green, orange, red], created_at, updated_at
+- [ ] UPDATE (PATCH) uma meal por ID - mealEaten
+- [x] Meal: id, name, description, date, mealEaten, caloriesQtt, carbsQtt, proteinQtt, fatQtt, trafficLight[green, orange, red], created_at, updated_at
 
 USERMEALS
 
 - [x] CREATE (POST) uma userMeal
-- [ ] GET (GET) todos userMeals por userId
+- [x] GET (GET) todos userMeals por userId
 - [ ] GET (GET) userMeal unica por userId
-- [ ] DELETE (DELETE) uma userMeal por ID
+- [x] DELETE (DELETE) uma userMeal por ID
 - [x] - user_id (table.foreign('user_id').references('id').inTable('users')),
     - meal_id (table.foreign('meal_id).references('id').inTables('meals'))
     - created_at
