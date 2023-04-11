@@ -16,6 +16,7 @@ export async function userRoutes(app: FastifyInstance) {
     })
 
     app.get('/:id', { preHandler: isThereSessionId }, async (request, reply) => {
+        if (!request.params) return reply.status(400).send('No request params found!')
         const id = requestParamsId(request)
         const sessionId = request.cookies.sessionId
         const user = await knex('users')
@@ -31,7 +32,7 @@ export async function userRoutes(app: FastifyInstance) {
     })
 
     app.post('/', { preHandler: isAdmin }, async (request, reply) => {
-        if (!request) return reply.status(400).send('No request found!')
+        if (!request.body) return reply.status(400).send('No request body found!')
         const body = requestBodyUser(request)
         if (!body) return reply.status(400).send('No body found!')
 
@@ -87,6 +88,7 @@ export async function userRoutes(app: FastifyInstance) {
     })
 
     app.delete('/:id', { preHandler: isThereSessionId }, async (request, reply) => {
+        if (!request.params) return reply.status(400).send('No request params found!')
         const id = requestParamsId(request)
         const sessionId = request.cookies.sessionId
         const user = await knex('users')
@@ -96,11 +98,7 @@ export async function userRoutes(app: FastifyInstance) {
             })
             .first()
         if (user === undefined) return reply.status(400).send(`User not found! ID: ${id}`)
-        if (user.session_id === sessionId || user.type === 'admin') {
-            await knex('users').where('id', id).delete('*')
-            return reply.status(200).send()
-        } else {
-            return reply.status(400).send('Unauthorized!')
-        }
+        await knex('users').where('id', id).delete('*')
+        return reply.status(200).send()
     })
 }

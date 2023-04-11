@@ -4,9 +4,9 @@ esse desafio desenvolveremos uma API para controle de dieta diária, a Daily Die
 
 #Requisitos Funcionais
 
-- [ ] Deve ser possível criar um usuário
-- [ ] Deve ser possível identificar o usuário entre as requisições
-- [ ] Deve ser possível registrar uma refeição feita, com as seguintes informações:
+- [x] Deve ser possível criar um usuário
+- [x] Deve ser possível identificar o usuário entre as requisições - cookie
+- [x] Deve ser possível registrar uma refeição feita, com as seguintes informações:
       _As refeições devem ser relacionadas a um usuário._
   - [x] Nome
   - [x] Descrição
@@ -15,16 +15,16 @@ esse desafio desenvolveremos uma API para controle de dieta diária, a Daily Die
 
 #Regras de Negócio
 
-- [ ] Deve ser possível editar uma refeição, podendo alterar todos os dados acima
+- [x] Deve ser possível editar uma refeição, podendo alterar todos os dados acima
 - [x] Deve ser possível apagar uma refeição
 - [x] Deve ser possível listar todas as refeições de um usuário
-- [ ] Deve ser possível visualizar uma única refeição
+- [x] Deve ser possível visualizar uma única refeição
 - [ ] Deve ser possível recuperar as métricas de um usuário
-  - [ ] Quantidade total de refeições registradas
-  - [ ] Quantidade total de refeições dentro da dieta
-  - [ ] Quantidade total de refeições fora da dieta
+  - [x] Quantidade total de refeições registradas
+  - [x] Quantidade total de refeições dentro da dieta
+  - [x] Quantidade total de refeições fora da dieta
   - [ ] Melhor sequência por dia de refeições dentro da dieta
-- [ ] O usuário só pode visualizar, editar e apagar as refeições o qual ele criou
+- [x] O usuário só pode visualizar, editar e apagar as refeições o qual ele criou
 
 #Requisitos não funcionais
 
@@ -42,18 +42,16 @@ MEAL
 - [x] CREATE (POST) uma meal (junto cria usermeal)
 - [x] GET (GET) todos meals (somente admin)
 - [x] GET (GET) todos meals (validando se o session_id bate com o que tá fazendo a requisição ou é admin)
-- [ ] GET (GET) uma meal por ID
-- [ ] DELETE (DELETE) uma meal por ID
-- [ ] UPDATE (PUT) uma meal por ID
-- [ ] UPDATE (PATCH) uma meal por ID - mealEaten
+- [x] GET (GET) uma meal por ID
+- [x] DELETE (DELETE) uma meal por ID
+- [x] UPDATE (PUT) uma meal por ID
+- [x] UPDATE (PATCH) uma meal por ID - mealEaten
 - [x] Meal: id, name, description, date, mealEaten, caloriesQtt, carbsQtt, proteinQtt, fatQtt, trafficLight[green, orange, red], created_at, updated_at
 
 USERMEALS
 
-- [x] CREATE (POST) uma userMeal
-- [x] GET (GET) todos userMeals por userId
-- [ ] GET (GET) userMeal unica por userId
-- [x] DELETE (DELETE) uma userMeal por ID
+- [x] CREATE (POST) uma userMeal (quando se cria uma meal)
+- [x] GET (GET) todos userMeals (somente adm)
 - [x] - user_id (table.foreign('user_id').references('id').inTable('users')),
     - meal_id (table.foreign('meal_id).references('id').inTables('meals'))
     - created_at
