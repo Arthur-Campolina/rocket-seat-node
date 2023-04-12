@@ -189,6 +189,8 @@ export async function mealRoutes(app: FastifyInstance) {
             .where('id', mealId)
             .update({
                 mealEaten: dbMeal.mealEaten ? false : true,
+                updated_at: knex.fn.now(),
+                date: dbMeal.mealEaten ? "" : knex.fn.now()
             })
             .returning('mealEaten')
 
