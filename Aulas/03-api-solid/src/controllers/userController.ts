@@ -1,15 +1,17 @@
 import { FastifyInstance } from "fastify";
-import { prisma } from "@/lib/prisma";
 // import { parseRequestParam } from "../utils/parseRequestParam";
-import { registerUser } from "@/services/userService";
+import { UserService } from "@/services/userService";
+import { UserRepository } from "@/repositories/userRepository";
 
 export async function userController(app: FastifyInstance) {
-  app.get("/", async (request, reply) => {
-    const users = await prisma.user.findMany();
-    return reply.status(200).send({
-      users,
-    });
-  });
+  const userRepository = new UserRepository();
+  const userService = new UserService(userRepository);
+  // app.get("/", async (request, reply) => {
+  //   const users = await prisma.user.findMany();
+  //   return reply.status(200).send({
+  //     users,
+  //   });
+  // });
 
   // app.get("/:id", async (request, reply) => {
   //   const id = await parseRequestParam(request, reply);
@@ -23,10 +25,10 @@ export async function userController(app: FastifyInstance) {
 
   app.post("/", async (request, reply) => {
     try {
-      const user = await registerUser(request);
+      const user = await userService.execute(request);
       return reply.status(201).send({ user });
     } catch (error: any) {
-      return reply.status(409).send(`Error: ${error}`);
+      return reply.status(409).send(`${error}`);
     }
   });
 

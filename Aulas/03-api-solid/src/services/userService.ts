@@ -1,19 +1,14 @@
-// import { prisma } from "@/lib/prisma";
-import { UserRepository } from "@/repositories/userRepository";
 import { parseRequestBodyUser } from "@/utils/parseRequestBodyUser";
 import { FastifyRequest } from "fastify";
 
-export async function registerUser(request: FastifyRequest) {
-  const body = await parseRequestBodyUser(request);
-  // const isThereUserWithSameEmail = await prisma.user.findUnique({
-  //   where: {
-  //     email: body.email,
-  //   },
-  // });
-  // if (isThereUserWithSameEmail)
-  //   throw new Error(`E-mail already exists! ${body.email}`);
+export class UserService {
+  constructor(private userRepository: any) {}
 
-  const userRepository = new UserRepository();
-  const user = await userRepository.create(body);
-  return user;
+  async execute(request: FastifyRequest) {
+    const body = await parseRequestBodyUser(request);
+    const userExist = await this.userRepository.findByEmail(body.email);
+    if (userExist) throw new Error("❌ User already exists!");
+    const user = this.userRepository.create(body);
+    return user;
+  }
 }

@@ -8,4 +8,13 @@ export class UserRepository {
     });
     return user;
   }
+
+  async findByEmail(email: string) {
+    const isThereUserWithSameEmail = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    return !!isThereUserWithSameEmail;
+  }
 }
