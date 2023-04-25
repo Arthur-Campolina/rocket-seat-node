@@ -1,10 +1,10 @@
 import { FastifyInstance } from "fastify";
 // import { parseRequestParam } from "../utils/parseRequestParam";
 import { UserService } from "@/services/userService";
-import { UserRepository } from "@/repositories/userRepository";
+import { PrismaUserRepository } from "@/repositories/userRepository";
 
 export async function userController(app: FastifyInstance) {
-  const userRepository = new UserRepository();
+  const userRepository = new PrismaUserRepository();
   const userService = new UserService(userRepository);
   // app.get("/", async (request, reply) => {
   //   const users = await prisma.user.findMany();
