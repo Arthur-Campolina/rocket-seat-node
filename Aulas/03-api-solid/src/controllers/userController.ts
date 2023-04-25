@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 // import { parseRequestParam } from "../utils/parseRequestParam";
 import { UserService } from "@/services/userService";
-import { PrismaUserRepository } from "@/repositories/userRepository";
+import { PrismaUserRepository } from "@/repositories/prisma/userRepository";
 
 export async function userController(app: FastifyInstance) {
   const userRepository = new PrismaUserRepository();
