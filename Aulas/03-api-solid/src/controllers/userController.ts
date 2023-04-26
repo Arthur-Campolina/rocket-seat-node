@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 // import { parseRequestParam } from "../utils/parseRequestParam";
 import { UserService } from "@/services/userService";
 import { PrismaUserRepository } from "@/repositories/prisma/userRepository";
+import { UserAlreadyExistsError } from "@/services/error/user-already-exists-error";
 
 export async function userController(app: FastifyInstance) {
   const userRepository = new PrismaUserRepository();
@@ -28,7 +29,10 @@ export async function userController(app: FastifyInstance) {
       const user = await userService.execute(request);
       return reply.status(201).send({ user });
     } catch (error: any) {
-      return reply.status(409).send(`${error}`);
+      if (error instanceof UserAlreadyExistsError) {
+        return reply.status(409).send({ Message: error.message });
+      }
+      return reply.status(500).send();
     }
   });
 
