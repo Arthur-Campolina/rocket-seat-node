@@ -1,12 +1,17 @@
 import fastify from "fastify";
-import { userController } from "./controllers/userController";
+import { userController } from "./http/controllers/userController";
 import { ZodError } from "zod";
 import { env } from "./env";
+import { authenticateController } from "./http/controllers/authenticateController";
 
 export const app = fastify();
 
 app.register(userController, {
   prefix: "/users",
+});
+
+app.register(authenticateController, {
+  prefix: "/sessions",
 });
 
 app.setErrorHandler((error, _request, reply) => {
