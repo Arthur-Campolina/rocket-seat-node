@@ -1,12 +1,11 @@
 import { FastifyInstance } from "fastify";
-import { UserService } from "@/services/userService";
-import { PrismaUserRepository } from "@/repositories/prisma/userRepository";
 import { parseRequestBodyUser } from "@/utils/parseRequestBodyUser";
 import { UserAlreadyExistsError } from "@/services/errors/user-already-exists-error";
+import { makeUserService } from "@/services/factories/make-userService";
 
 export async function userController(app: FastifyInstance) {
-  const userRepository = new PrismaUserRepository();
-  const userService = new UserService(userRepository);
+  const userService = makeUserService();
+
   app.post("/", async (request, reply) => {
     const requestBody = request.body;
     if (!requestBody) throw new Error("No request body found!");
