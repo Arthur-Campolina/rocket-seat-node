@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { parseRequestBodyUser } from "@/utils/parseRequestBodyUser";
 import { UserAlreadyExistsError } from "@/services/errors/user-already-exists-error";
-import { makeUserService } from "@/services/factories/make-userService";
+import { makeUserService } from "@/services/factories/make-createUserService";
 
 export async function userController(app: FastifyInstance) {
   const userService = makeUserService();

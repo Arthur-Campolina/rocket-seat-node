@@ -4,14 +4,14 @@ import { AuthenticateService } from "../authenticateService";
 import { hash } from "bcryptjs";
 import { InvalidCredentialsError } from "../errors/invalid-credentials-error";
 
-let userRepository: InMemoryUserRepository
-let sut: AuthenticateService
+let userRepository: InMemoryUserRepository;
+let sut: AuthenticateService;
 
 describe("Authenticate Service Test", () => {
   beforeEach(() => {
     userRepository = new InMemoryUserRepository();
     sut = new AuthenticateService(userRepository);
-  })
+  });
 
   it("should authenticate successfully", async () => {
     await userRepository.create({

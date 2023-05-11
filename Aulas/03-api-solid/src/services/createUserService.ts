@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client";
 import { hash } from "bcryptjs";
 import { UserAlreadyExistsError } from "./errors/user-already-exists-error";
 
-export class UserService {
+export class CreateUserService {
   constructor(private userRepository: IUserRepository) {}
 
   async execute(body: Prisma.UserCreateInput) {
