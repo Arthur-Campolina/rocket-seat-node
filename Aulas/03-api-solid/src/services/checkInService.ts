@@ -17,6 +17,11 @@ export class CheckInService {
     userId,
     gymId,
   }: CheckInServiceRequest): Promise<CheckInServiceResponse> {
+    const hasUserCheckedInTodayAlready =
+      await this.checkInRepository.findByUserOnADate(userId);
+    if (hasUserCheckedInTodayAlready)
+      throw new Error("User has already checked in today!");
+
     const checkIn = await this.checkInRepository.create({
       gym_id: gymId,
       user_id: userId,
