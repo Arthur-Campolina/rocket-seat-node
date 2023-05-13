@@ -1,4 +1,4 @@
-import { PrismaUserRepository } from "@/repositories/prisma/userRepository";
+import { PrismaUserRepository } from "@/repositories/prisma/PrismaUserRepository";
 import { AuthenticateService } from "@/services/authenticateService";
 
 export function makeAuthenticateService() {
