@@ -18,4 +18,13 @@ export class PrismaGymRepository implements IGymRepository {
     });
     return gym;
   }
+
+  async findBySearch(query: string, page: number) {
+    if (page <= 0) page = 1;
+    const gyms = await prisma.gym.findMany();
+    const paginatedGyms = gyms
+      .slice((page - 1) * 20, page * 20)
+      .filter((gym) => (gym.title = query));
+    return paginatedGyms;
+  }
 }

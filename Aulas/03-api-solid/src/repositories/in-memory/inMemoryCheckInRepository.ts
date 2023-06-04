@@ -41,4 +41,11 @@ export class InMemoryCheckInRepository implements ICheckInRepositoy {
       .slice((page - 1) * 20, page * 20);
     return checkIns;
   }
+
+  async getNumberCheckinsByUser(userId: string) {
+    const numberCheckIns = this.checkIns.filter(
+      (checkIn) => checkIn.user_id === userId
+    ).length;
+    return numberCheckIns;
+  }
 }

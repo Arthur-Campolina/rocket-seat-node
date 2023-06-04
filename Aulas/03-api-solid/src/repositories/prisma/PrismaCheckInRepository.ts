@@ -33,11 +33,23 @@ export class PrismaCheckInRepository implements ICheckInRepositoy {
   }
 
   async getAllByUser(userId: string, page: number) {
+    if (page <= 0) page = 1;
     const checkIns = await prisma.checkIn.findMany({
       where: {
         user_id: userId,
       },
     });
-    return checkIns;
+    const paginatedCheckins = checkIns.slice((page - 1) * 20, page * 20);
+    return paginatedCheckins;
+  }
+
+  async getNumberCheckinsByUser(userId: string) {
+    const checkIns = await prisma.checkIn.findMany({
+      where: {
+        user_id: userId,
+      },
+    });
+    const numberCheckIns = checkIns.length;
+    return numberCheckIns;
   }
 }
