@@ -31,7 +31,7 @@ export class CheckInService {
   }: CheckInServiceRequest): Promise<CheckInServiceResponse> {
     // === CHECKS IF USERS'S ALREADY CHECKED IN TODAY
     const hasUserCheckedInTodayAlready =
-      await this.checkInRepository.findByUserOnADate(userId);
+      await this.checkInRepository.getByUserOnADate(userId);
     if (hasUserCheckedInTodayAlready) throw new MaxNumberOfChenckInsError();
 
     const gym = await this.gymRepository.findById(gymId);

@@ -15,7 +15,7 @@ export class PrismaCheckInRepository implements ICheckInRepositoy {
     return checkIn;
   }
 
-  async findByUserOnADate(userId: string) {
+  async getByUserOnADate(userId: string) {
     const now = new Date();
     const startOfTheDay = dayjs(now).startOf("date").toISOString();
     const endOfTheDay = dayjs(now).endOf("date").toISOString();
@@ -30,5 +30,14 @@ export class PrismaCheckInRepository implements ICheckInRepositoy {
       },
     });
     return checkIn;
+  }
+
+  async getAllByUser(userId: string, page: number) {
+    const checkIns = await prisma.checkIn.findMany({
+      where: {
+        user_id: userId,
+      },
+    });
+    return checkIns;
   }
 }

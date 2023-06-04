@@ -19,7 +19,7 @@ export class InMemoryCheckInRepository implements ICheckInRepositoy {
     return checkIn;
   }
 
-  async findByUserOnADate(userId: string) {
+  async getByUserOnADate(userId: string) {
     const now = new Date();
     const startOfTheDay = dayjs(now).startOf("date");
     const endOfTheDay = dayjs(now).endOf("date");
@@ -32,5 +32,13 @@ export class InMemoryCheckInRepository implements ICheckInRepositoy {
     });
     if (checkIn) return checkIn;
     return null;
+  }
+
+  async getAllByUser(userId: string, page: number) {
+    if (page <= 0) page = 1;
+    const checkIns = this.checkIns
+      .filter((checkIn) => checkIn.user_id === userId)
+      .slice((page - 1) * 20, page * 20);
+    return checkIns;
   }
 }
