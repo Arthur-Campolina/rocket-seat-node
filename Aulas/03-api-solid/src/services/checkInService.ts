@@ -3,6 +3,8 @@ import { PrismaGymRepository } from "@/repositories/prisma/PrismaGymRepository";
 import { CheckIn } from "@prisma/client";
 import { ResourceNotFoundError } from "./errors/resource-not-found-error";
 import { getDistanceBetweenCoordinates } from "@/utils/getDistanceBetweenCoordinates";
+import { MaxDistanceError } from "./errors/max-distance-error";
+import { MaxNumberOfChenckInsError } from "./errors/max-number-of-check-ins-error";
 
 interface CheckInServiceRequest {
   userId: string;
@@ -30,8 +32,7 @@ export class CheckInService {
     // === CHECKS IF USERS'S ALREADY CHECKED IN TODAY
     const hasUserCheckedInTodayAlready =
       await this.checkInRepository.findByUserOnADate(userId);
-    if (hasUserCheckedInTodayAlready)
-      throw new Error("User has already checked in today!");
+    if (hasUserCheckedInTodayAlready) throw new MaxNumberOfChenckInsError();
 
     const gym = await this.gymRepository.findById(gymId);
     if (!gym) throw new ResourceNotFoundError();
@@ -48,7 +49,7 @@ export class CheckInService {
       }
     );
     const MAX_DISTANCE_KM = 0.1;
-    if (distance >= MAX_DISTANCE_KM) throw new Error();
+    if (distance >= MAX_DISTANCE_KM) throw new MaxDistanceError();
 
     // === USER CHECKS IN IF IT'S THEIR FIRST TIME TODAY AND THE GYM IS NEAR
     const checkIn = await this.checkInRepository.create({

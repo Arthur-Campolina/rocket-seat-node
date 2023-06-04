@@ -20,9 +20,6 @@ export class GetUserProfileService {
     if (!user) {
       throw new ResourceNotFoundError();
     }
-
-    return {
-      user,
-    };
+    return { user };
   }
 }

@@ -3,18 +3,20 @@ import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
 import { CheckInService } from "../checkInService";
 import { randomUUID } from "node:crypto";
 import { InMemoryGymRepository } from "@/repositories/in-memory/inMemoryGymRepository";
+import { MaxDistanceError } from "../errors/max-distance-error";
+import { MaxNumberOfChenckInsError } from "../errors/max-number-of-check-ins-error";
 
 let checkInRepository: InMemoryCheckInRepository;
 let gymRepository: InMemoryGymRepository;
 let sut: CheckInService;
 
 describe("Check-in Service Test", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     checkInRepository = new InMemoryCheckInRepository();
     gymRepository = new InMemoryGymRepository();
     sut = new CheckInService(checkInRepository, gymRepository);
 
-    gymRepository.create({
+    await gymRepository.create({
       id: "gym-1",
       title: "JavaScrypt Gym",
       phone: "",
@@ -41,7 +43,6 @@ describe("Check-in Service Test", () => {
 
     expect(checkIn.id).toEqual(expect.any(String));
   });
-
   it("Shouldn't check in more than once a day", async () => {
     const userId = randomUUID();
     const gymId = "gym-1";
@@ -61,9 +62,8 @@ describe("Check-in Service Test", () => {
         userLatitude: 0,
         userLongitude: 0,
       })
-    ).rejects.toBeInstanceOf(Error);
+    ).rejects.toBeInstanceOf(MaxNumberOfChenckInsError);
   });
-
   it("Should check in more than once if it is on a different day", async () => {
     const userId = randomUUID();
     const gymId = "gym-1";
@@ -85,7 +85,6 @@ describe("Check-in Service Test", () => {
     });
     expect(checkIn.id).toEqual(expect.any(String));
   });
-
   it("Should check in at a near gym", async () => {
     const userId = randomUUID();
     const gymId = "gym-1";
@@ -99,7 +98,6 @@ describe("Check-in Service Test", () => {
     });
     expect(checkIn.id).toEqual(expect.any(String));
   });
-
   it("Shouldn't check in at a distant gym", async () => {
     const userId = randomUUID();
     const gymId = "gym-1";
@@ -112,6 +110,6 @@ describe("Check-in Service Test", () => {
         userLatitude: 1000,
         userLongitude: 1000,
       })
-    ).rejects.toBeInstanceOf(Error);
+    ).rejects.toBeInstanceOf(MaxDistanceError);
   });
 });
