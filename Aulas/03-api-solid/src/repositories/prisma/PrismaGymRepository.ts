@@ -24,7 +24,7 @@ export class PrismaGymRepository implements IGymRepository {
     const gyms = await prisma.gym.findMany();
     const paginatedGyms = gyms
       .slice((page - 1) * 20, page * 20)
-      .filter((gym) => (gym.title = query));
+      .filter((gym) => gym.title === query);
     return paginatedGyms;
   }
 }

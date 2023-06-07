@@ -29,7 +29,7 @@ export class InMemoryGymRepository implements IGymRepository {
     if (page <= 0) page = 1;
     const gyms = this.gyms
       .slice((page - 1) * 20, page * 20)
-      .filter((gym) => (gym.title = query));
+      .filter((gym) => gym.title === query);
     return gyms;
   }
 }

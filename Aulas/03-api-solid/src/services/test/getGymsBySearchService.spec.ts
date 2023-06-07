@@ -16,8 +16,10 @@ describe("Get Gyms by search", () => {
         latitude: 0,
         longitude: 0,
       };
-      gyms.push(data);
+      const newGym = { ...data };
+      gyms.push(newGym);
     }
+
     for (const gym of gyms) {
       await gymRepository.create(gym);
     }
