@@ -19,6 +19,21 @@ export class InMemoryCheckInRepository implements ICheckInRepositoy {
     return checkIn;
   }
 
+  async getById(id: string) {
+    const checkIn = this.checkIns.find((checkIn) => (checkIn.id = id));
+    if (!checkIn) return null;
+    return checkIn;
+  }
+
+  async update(checkIn: CheckIn) {
+    const index = this.checkIns.findIndex((c) => (c.id = checkIn.id));
+    const updatedCheckIn = checkIn;
+    if (index >= 0) {
+      this.checkIns[index] = updatedCheckIn;
+    }
+    return updatedCheckIn;
+  }
+
   async getByUserOnADate(userId: string) {
     const now = new Date();
     const startOfTheDay = dayjs(now).startOf("date");
