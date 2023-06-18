@@ -1,4 +1,4 @@
-import { PrismaGymRepository } from "@/repositories/prisma/PrismaGymRepository";
+import { IGymRepository } from "@/repositories/IGymRepository";
 import { Gym } from "@prisma/client";
 
 interface GetGymBySearchServiceRequest {
@@ -10,7 +10,7 @@ interface GetGymBySearchServiceResponse {
 }
 
 export class GetGymBySearch {
-  constructor(private gymRepository: PrismaGymRepository) {}
+  constructor(private gymRepository: IGymRepository) {}
 
   async execute({
     query,

@@ -1,4 +1,4 @@
-import { PrismaGymRepository } from "@/repositories/prisma/PrismaGymRepository";
+import { IGymRepository } from "@/repositories/IGymRepository";
 import { Gym } from "@prisma/client";
 import { ResourceNotFoundError } from "./errors/resource-not-found-error";
 
@@ -14,7 +14,7 @@ interface CreateGymServiceResponse {
 }
 
 export class CreateGymService {
-  constructor(private gymRepository: PrismaGymRepository) {}
+  constructor(private gymRepository: IGymRepository) {}
 
   async execute({
     title,

@@ -1,4 +1,4 @@
-import { PrismaCheckInRepository } from "@/repositories/prisma/PrismaCheckInRepository";
+import { ICheckInRepositoy } from "@/repositories/ICheckInRepository";
 import { CheckIn } from "@prisma/client";
 
 interface GetCheckInsByUserServiceRequest {
@@ -10,7 +10,7 @@ interface GetCheckInsByUserServiceResponse {
 }
 
 export class GetCheckInsByUser {
-  constructor(private checkInRepository: PrismaCheckInRepository) {}
+  constructor(private checkInRepository: ICheckInRepositoy) {}
 
   async execute({
     userId,

@@ -1,4 +1,4 @@
-import { PrismaUserRepository } from "@/repositories/prisma/PrismaUserRepository";
+import { IUserRepository } from "@/repositories/IUserRepository";
 import { User } from "@prisma/client";
 import { ResourceNotFoundError } from "./errors/resource-not-found-error";
 
@@ -11,7 +11,7 @@ interface AuthenticateServiceResponse {
 }
 
 export class GetUserProfileService {
-  constructor(private userRepository: PrismaUserRepository) {}
+  constructor(private userRepository: IUserRepository) {}
 
   async execute({
     id,
