@@ -27,7 +27,6 @@ describe("Get Gyms by search", () => {
 
   it("Should Get Gyms by Search", async () => {
     const { gyms } = await sut.execute({ query: "JSGym-22", page: 2 });
-    console.log(JSON.stringify(gyms));
     expect(gyms).toHaveLength(1);
     expect(gyms).toEqual([expect.objectContaining({ title: "JSGym-22" })]);
   });
