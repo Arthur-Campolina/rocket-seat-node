@@ -1,5 +1,5 @@
-import { Prisma } from "@prisma/client";
-import { IGymRepository } from "../IGymRepository";
+import { Gym, Prisma } from "@prisma/client";
+import { FindNearGymsParams, IGymRepository } from "../IGymRepository";
 import { prisma } from "@/lib/prisma";
 
 export class PrismaGymRepository implements IGymRepository {
@@ -21,10 +21,25 @@ export class PrismaGymRepository implements IGymRepository {
 
   async findBySearch(query: string, page: number) {
     if (page <= 0) page = 1;
-    const gyms = await prisma.gym.findMany();
-    const paginatedGyms = gyms
-      .slice((page - 1) * 20, page * 20)
-      .filter((gym) => gym.title === query);
+    const paginatedGyms = await prisma.gym.findMany({
+      where: {
+        title: {
+          contains: query,
+        },
+      },
+      take: 20,
+      skip: (page - 1) * 20,
+    });
     return paginatedGyms;
+  }
+
+  async findNearGyms({ latitude, longitude }: FindNearGymsParams) {
+    const gyms = await prisma.$queryRaw<Gym[]>`
+      SELECT  
+        * 
+      FROM gyms
+      WHERE ( 6371 * acos( cos( radians(${latitude}) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin( radians( latitude ) ) ) ) <= 10
+    `;
+    return gyms;
   }
 }

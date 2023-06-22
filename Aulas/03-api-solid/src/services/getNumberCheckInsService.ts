@@ -1,6 +1,6 @@
 import { ICheckInRepositoy } from "@/repositories/ICheckInRepository";
 
-export class GetNumberCheckInsByUser {
+export class GetNumberCheckInsService {
   constructor(private checkInRepository: ICheckInRepositoy) {}
 
   async execute(userId: string): Promise<number> {
