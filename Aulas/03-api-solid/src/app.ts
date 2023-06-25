@@ -1,18 +1,14 @@
 import fastify from "fastify";
-import { userController } from "./http/controllers/userController";
 import { ZodError } from "zod";
 import { env } from "./env";
-import { authenticateController } from "./http/controllers/authenticateController";
+import { appRoutes } from "./http/appRoutes";
+import fastifyJwt from "@fastify/jwt";
 
 export const app = fastify();
-
-app.register(userController, {
-  prefix: "/users",
+app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
 });
-
-app.register(authenticateController, {
-  prefix: "/sessions",
-});
+app.register(appRoutes);
 
 app.setErrorHandler((error, _request, reply) => {
   if (env.NODE_ENV !== "production") {
