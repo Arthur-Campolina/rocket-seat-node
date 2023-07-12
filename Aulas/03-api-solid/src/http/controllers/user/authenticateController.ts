@@ -14,9 +14,9 @@ export async function authenticateController(
   const { email, password } = authenticateBodySchema.parse(request.body);
 
   try {
-    const authenticateUseCase = makeAuthenticateService();
+    const authenticateService = makeAuthenticateService();
 
-    const { user } = await authenticateUseCase.execute({
+    const { user } = await authenticateService.execute({
       email,
       password,
     });
