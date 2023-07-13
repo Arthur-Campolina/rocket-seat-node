@@ -15,7 +15,7 @@ export async function getNearGymsController(
     }),
   });
   const { userLatitude, userLongitude } = nearGymsQuerySchema.parse(
-    request.body
+    request.query
   );
 
   const getNearGymsService = makeGetNearGymsService();

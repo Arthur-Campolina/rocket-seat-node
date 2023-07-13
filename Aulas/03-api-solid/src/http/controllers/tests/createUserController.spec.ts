@@ -11,8 +11,8 @@ describe("Create User Controller (e2e)", () => {
   });
   it("should create a new user", async () => {
     const response = await request(app.server).post("/users").send({
-      name: "Jhon Doe",
-      email: "jhondoe@test.com",
+      name: "Jhon Doe Test",
+      email: "jhondoe@test.com.br",
       password: "abc123456",
     });
     expect(response.statusCode).toEqual(201);
