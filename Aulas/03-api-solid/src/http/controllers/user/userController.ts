@@ -7,18 +7,18 @@ export async function userController(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const registerBodySchema = z.object({
+  const createUserBodySchema = z.object({
     name: z.string(),
     email: z.string().email(),
     password: z.string().min(6),
   });
 
-  const { name, email, password } = registerBodySchema.parse(request.body);
+  const { name, email, password } = createUserBodySchema.parse(request.body);
 
   try {
-    const registerUseCase = makeCreateUserService();
+    const createUserService = makeCreateUserService();
 
-    await registerUseCase.execute({
+    await createUserService.execute({
       name,
       email,
       password,

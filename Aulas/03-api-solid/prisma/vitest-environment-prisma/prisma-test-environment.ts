@@ -1,9 +1,10 @@
+import "dotenv/config";
+
 import { randomUUID } from "node:crypto";
 import { execSync } from "node:child_process";
 
 import { Environment } from "vitest";
 import { PrismaClient } from "@prisma/client";
-import "dotenv/config";
 
 const prisma = new PrismaClient();
 
@@ -22,7 +23,10 @@ export default <Environment>{
     const schema = randomUUID();
     const databaseURL = generateDatabaseURL(schema);
     process.env.DATABASE_URL = databaseURL;
+    console.log("URL:", process.env.DATABASE_URL);
+
     execSync("npx prisma migrate deploy");
+
     return {
       async teardown() {
         await prisma.$executeRawUnsafe(
