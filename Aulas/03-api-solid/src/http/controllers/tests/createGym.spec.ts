@@ -25,5 +25,10 @@ describe("Create gym (e2e)", () => {
         longitude: -44.0241802,
       });
     expect(response.statusCode).toEqual(201);
+    expect(response.body.gym).toEqual(
+      expect.objectContaining({
+        title: "E2E Gym",
+      })
+    );
   });
 });

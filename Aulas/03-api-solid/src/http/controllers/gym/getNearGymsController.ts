@@ -7,10 +7,10 @@ export async function getNearGymsController(
   reply: FastifyReply
 ) {
   const nearGymsQuerySchema = z.object({
-    userLongitude: z.number().refine((value) => {
+    userLongitude: z.coerce.number().refine((value) => {
       return Math.abs(value) <= 180;
     }),
-    userLatitude: z.number().refine((value) => {
+    userLatitude: z.coerce.number().refine((value) => {
       return Math.abs(value) <= 90;
     }),
   });
