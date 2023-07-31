@@ -2,6 +2,7 @@ import fastify from "fastify";
 import { ZodError } from "zod";
 
 import fastifyJwt from "@fastify/jwt";
+import fastifyCookie from "@fastify/cookie";
 
 import { env } from "./env";
 import { userRoutes } from "./http/controllers/user/userRoutes";
@@ -9,9 +10,19 @@ import { gymRoutes } from "./http/controllers/gym/gymRoutes";
 import { checkInRoutes } from "./http/controllers/checkIn/checkInRoutes";
 
 export const app = fastify();
+
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
+  cookie: {
+    cookieName: "refreshToken",
+    signed: false,
+  },
+  sign: {
+    expiresIn: "10m",
+  },
 });
+app.register(fastifyCookie);
+
 app.register(userRoutes);
 app.register(gymRoutes);
 app.register(checkInRoutes);
