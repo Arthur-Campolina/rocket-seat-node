@@ -1,6 +1,6 @@
 //middlewares = receptores e sempre recebem o req e res
 
-export async function middleware(req, res) {
+export async function bufferMiddleware(req, res) {
     const buffers = []
 
     for await (const chunk of req) {
