@@ -17,8 +17,13 @@ class OneToHundredStream extends Readable {
     }
 }
 
+// possível abrir um canal e mantelo aberto
 fetch('http://localhost:3334', {
     method: 'POST',
     body: new OneToHundredStream(),
     duplex: 'half'
+}).then(res => {
+    return res.text()
+}).then(res => {
+    console.log(res)
 })
