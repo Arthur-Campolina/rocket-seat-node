@@ -1,36 +1,29 @@
 import http from 'node:http'
-import { randomUUID } from 'node:crypto'
-import { InMemoryDatabase } from './inMemoryDatabase.js'
 import { bufferMiddleware } from './middlewares/middleware.js'
+import { newRoutes } from './newRoutes.js'
 
-const database = new InMemoryDatabase()
+
+const PORT = 3333
 
 const server = http.createServer(async (req, res) => {
     const { method, url } = req
 
     await bufferMiddleware(req, res)
 
-    if (method === 'GET' && url === '/users') {
-        const users = database.select('users')
+    const route = newRoutes.find(route => {
+        const existRoute = route.method === method && route.path.test(url)
+        return existRoute
+    })
 
-        return res.end(JSON.stringify(users))
+    if (route) {
+        const routeParams = req.url.match(route.path)
+        const { query, ...params } = routeParams.groups
+        req.params = params
+        req.query = query ? extractQueryParams(query) : {}
+        return route.handler(req, res)
     }
-
-    if (method === 'POST' && url === '/users') {
-        const { name, email } = req.body
-
-        const user = {
-            id: randomUUID(),
-            name,
-            email,
-        }
-
-        database.insert('users', user)
-
-        return res.writeHead(201).end()
-    }
-
-    return res.writeHead(404).end()
 })
 
-server.listen(3333)
+server.listen(PORT, () => {
+    console.log("Server's up! 🚀")
+})

@@ -8,6 +8,8 @@ export class InMemoryDatabase {
 
     constructor() {
         fs.readFile(databasePath, 'utf8').then(data => {
+            console.log('setting db', JSON.parse(data))
+
             this.#database = JSON.parse(data)
         }).catch(() => {
             this.#persist()
@@ -34,5 +36,29 @@ export class InMemoryDatabase {
         this.#persist()
 
         return data
+    }
+
+    remove(table, id) {
+        const rowIndex = this.#database[table]?.findIndex(row => row.id === id)
+
+        if (rowIndex > -1) {
+            this.#database[table]?.splice(rowIndex, 1)
+            this.#persist()
+            return id
+        }
+
+        return ''
+    }
+
+    update(table, id, data) {
+        const rowIndex = this.#database[table]?.findIndex(row => row.id === id)
+        console.log('rowIndex', rowIndex)
+        if (rowIndex > -1) {
+            this.#database[table][rowIndex] = { id, ...data }
+            this.#persist()
+            return id
+        }
+
+        return ''
     }
 }
