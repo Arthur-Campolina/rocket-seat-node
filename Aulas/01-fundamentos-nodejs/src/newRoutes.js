@@ -8,8 +8,9 @@ export const newRoutes = [
     {
         method: 'GET',
         path: buildRoutePath('/users'),
-        handler: (_req, res) => {
-            const users = database.select('users')
+        handler: (req, res) => {
+
+            const users = database.select('users', req.query)
 
             return res.end(JSON.stringify(users))
         }
@@ -35,7 +36,6 @@ export const newRoutes = [
         method: 'DELETE',
         path: buildRoutePath('/users/:id'),
         handler: (req, res) => {
-            console.log('params', JSON.stringify(req.params))
             const { id } = req.params
 
             const response = database.remove('users', id)
@@ -49,7 +49,6 @@ export const newRoutes = [
         method: 'PUT',
         path: buildRoutePath('/users/:id'),
         handler: (req, res) => {
-            console.log('params', JSON.stringify(req.params))
             const { id } = req.params
             const data = req.body
 

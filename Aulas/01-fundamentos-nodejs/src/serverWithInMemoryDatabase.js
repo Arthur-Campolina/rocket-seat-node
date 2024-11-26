@@ -1,6 +1,7 @@
 import http from 'node:http'
 import { bufferMiddleware } from './middlewares/middleware.js'
 import { newRoutes } from './newRoutes.js'
+import { extractQueryParams } from './utils/extractQueryParams.js'
 
 
 const PORT = 3333
@@ -19,7 +20,7 @@ const server = http.createServer(async (req, res) => {
         const routeParams = req.url.match(route.path)
         const { query, ...params } = routeParams.groups
         req.params = params
-        req.query = query ? extractQueryParams(query) : {}
+        req.query = query ? extractQueryParams(query) : null
         return route.handler(req, res)
     }
 })
