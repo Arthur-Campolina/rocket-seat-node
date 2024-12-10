@@ -6,6 +6,10 @@ import { paramsZType } from "../types/requestParamsType";
 import { checkIfSessionIdExists } from "../middlewares/check-exists-sessionId";
 
 export async function transactionRoutes(app: FastifyInstance) {
+  app.addHook("preHandler", async () => {
+    console.log("global preHandler");
+  });
+
   app.get("/", { preHandler: checkIfSessionIdExists }, async (req, rep) => {
     const { sessionId } = req.cookies;
 
@@ -14,7 +18,8 @@ export async function transactionRoutes(app: FastifyInstance) {
       .select("*");
 
     return rep.status(200).send({
-      transactions,
+      result: transactions,
+      quantity: transactions.length,
     });
   });
 
@@ -69,6 +74,7 @@ export async function transactionRoutes(app: FastifyInstance) {
 
     if (!sessionId) {
       sessionId = randomUUID();
+
       rep.cookie("sessionId", sessionId, {
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
       });
@@ -80,6 +86,7 @@ export async function transactionRoutes(app: FastifyInstance) {
       amount: body.type === "credit" ? body.amount : body.amount * -1,
       session_id: sessionId,
     });
+
     return rep.status(201).send("Transaction Created!");
   });
 
