@@ -1,5 +1,11 @@
 import { app } from "./app.js";
 import { env } from "./env/index.js";
+import { routes } from "./routes/routes.js";
+import { genericErrorHandler } from "./utils/genericErrorHandler.js";
+
+routes(app)
+
+genericErrorHandler(app)
 
 app
   .listen({

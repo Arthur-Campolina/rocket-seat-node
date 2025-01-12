@@ -1,5 +1,6 @@
 import { makeGetCheckInsByUserService } from "@/services/factories/make-getCheckInsByUserService";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 
 export async function getCheckInByUserController(
@@ -17,5 +18,5 @@ export async function getCheckInByUserController(
     page,
   });
 
-  return reply.status(200).send({ checkIns });
+  return reply.status(StatusCodes.OK).send({ checkIns });
 }

@@ -1,5 +1,6 @@
 import { makeGetNumberCheckInsService } from "@/services/factories/make-getNumberCheckInsService";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { StatusCodes } from "http-status-codes";
 
 export async function getNumberCheckInsController(
   request: FastifyRequest,
@@ -9,5 +10,5 @@ export async function getNumberCheckInsController(
   const getNumberCheckInsService = makeGetNumberCheckInsService();
   const numberCheckIns = await getNumberCheckInsService.execute(userId);
 
-  return reply.status(200).send({ numberCheckIns });
+  return reply.status(StatusCodes.OK).send({ numberCheckIns });
 }

@@ -1,5 +1,6 @@
 import { makeGetGymsBySearchService } from "@/services/factories/make-GymsBySearchService";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 
 export async function getGymsBySearchController(
@@ -18,5 +19,5 @@ export async function getGymsBySearchController(
     page,
   });
 
-  return reply.status(200).send({ gyms });
+  return reply.status(StatusCodes.OK).send({ gyms });
 }

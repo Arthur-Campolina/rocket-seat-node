@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { UserAlreadyExistsError } from "@/services/errors/user-already-exists-error";
 import { makeCreateUserService } from "@/services/factories/make-createUserService";
 import { z } from "zod";
+import { StatusCodes } from "http-status-codes";
 
 export async function userController(
   request: FastifyRequest,
@@ -23,11 +24,12 @@ export async function userController(
       email,
       password,
     });
+
+    return reply.status(StatusCodes.CREATED).send();
   } catch (err) {
-    if (err instanceof UserAlreadyExistsError) {
-      return reply.status(409).send({ message: err.message });
-    }
-    throw err;
+    if (err instanceof UserAlreadyExistsError) 
+      return reply.status(StatusCodes.CONFLICT).send({ error: err.message });
+    
+    return err
   }
-  return reply.status(201).send();
 }

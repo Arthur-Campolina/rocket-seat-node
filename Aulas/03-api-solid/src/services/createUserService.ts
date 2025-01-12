@@ -8,10 +8,15 @@ export class CreateUserService {
 
   async execute(body: Prisma.UserCreateInput) {
     const userExist = await this.userRepository.findByEmail(body.email);
+
     if (userExist) throw new UserAlreadyExistsError();
-    const hashedPassword = await hash(body.password, 6);
+
+    const hashedPassword = await hashs(body.password, 6);
+
     body.password = hashedPassword;
+
     const user = await this.userRepository.create(body);
+    
     return user;
   }
 }

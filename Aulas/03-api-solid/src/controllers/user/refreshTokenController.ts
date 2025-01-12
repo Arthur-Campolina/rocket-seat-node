@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { StatusCodes } from "http-status-codes";
 
 export async function refreshTokenController(
   request: FastifyRequest,
@@ -31,6 +32,6 @@ export async function refreshTokenController(
       sameSite: true,
       httpOnly: true,
     })
-    .status(200)
+    .status(StatusCodes.OK)
     .send({ token });
 }

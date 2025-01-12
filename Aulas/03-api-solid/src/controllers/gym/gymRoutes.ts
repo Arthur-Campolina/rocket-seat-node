@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { createGymController } from "./createGymController";
-import { verifyJWT } from "@/http/middlewares/verify-jwt";
+import { verifyJWT } from "@/middlewares/verify-jwt";
 import { getGymsBySearchController } from "./getGymsBySearchController";
 import { getNearGymsController } from "./getNearGymsController";
 

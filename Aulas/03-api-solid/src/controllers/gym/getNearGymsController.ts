@@ -1,5 +1,6 @@
 import { makeGetNearGymsService } from "@/services/factories/make-getNearGymsService";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 
 export async function getNearGymsController(
@@ -23,5 +24,5 @@ export async function getNearGymsController(
     userLatitude,
     userLongitude,
   });
-  return reply.status(200).send({ gyms });
+  return reply.status(StatusCodes.OK).send({ gyms });
 }

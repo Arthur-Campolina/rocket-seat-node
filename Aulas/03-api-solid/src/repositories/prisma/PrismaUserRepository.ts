@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../../prisma/prisma";
 import { IUserRepository } from "../IUserRepository";
 
 export class PrismaUserRepository implements IUserRepository {
@@ -9,6 +9,7 @@ export class PrismaUserRepository implements IUserRepository {
         id,
       },
     });
+    
     return user;
   }
 
@@ -18,6 +19,7 @@ export class PrismaUserRepository implements IUserRepository {
         email,
       },
     });
+
     return user;
   }
 
@@ -25,6 +27,7 @@ export class PrismaUserRepository implements IUserRepository {
     const user = await prisma.user.create({
       data,
     });
+
     return user;
   }
 }

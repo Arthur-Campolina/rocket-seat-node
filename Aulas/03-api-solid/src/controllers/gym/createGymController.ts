@@ -1,5 +1,6 @@
 import { makeCreateGymService } from "@/services/factories/make-createGymService";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 
 export async function createGymController(
@@ -29,5 +30,5 @@ export async function createGymController(
     latitude,
   });
 
-  return reply.status(201).send({ gym });
+  return reply.status(StatusCodes.CREATED).send({ gym });
 }

@@ -1,5 +1,6 @@
 import { makeValidateCheckInsService } from "@/services/factories/make-validateCheckInService";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 
 export async function validateCheckInController(
@@ -14,8 +15,9 @@ export async function validateCheckInController(
 
   try {
     await validateCheckInService.execute({ checkInId });
-    return reply.status(204).send();
+
+    return reply.status(StatusCodes.NO_CONTENT).send();
   } catch (error: any) {
-    return reply.status(400).send(error);
+    return reply.status(StatusCodes.BAD_REQUEST).send(error);
   }
 }

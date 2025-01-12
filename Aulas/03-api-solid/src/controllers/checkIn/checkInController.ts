@@ -1,5 +1,6 @@
 import { makeCheckInService } from "@/services/factories/make-checkInService";
 import { FastifyReply, FastifyRequest } from "fastify";
+import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 
 export async function checkInController(
@@ -28,8 +29,9 @@ export async function checkInController(
       userLatitude,
       userLongitude,
     });
-    return reply.status(201).send({ checkIn });
-  } catch (error: any) {
-    return reply.status(400).send(error);
+    
+    return reply.status(StatusCodes.CREATED).send({ checkIn });
+  } catch (error) {
+    return reply.status(StatusCodes.BAD_REQUEST).send(error);
   }
 }
