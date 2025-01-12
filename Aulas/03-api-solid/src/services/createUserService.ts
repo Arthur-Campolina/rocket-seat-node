@@ -11,7 +11,7 @@ export class CreateUserService {
 
     if (userExist) throw new UserAlreadyExistsError();
 
-    const hashedPassword = await hashs(body.password, 6);
+    const hashedPassword = await hash(body.password, 6);
 
     body.password = hashedPassword;
 
