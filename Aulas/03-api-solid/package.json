@@ -9,6 +9,7 @@
     "prod": "node build/server.js",
     "test": "vitest run --dir src/services/test",
     "test:watch": "vitest --dir src/services/test",
+    "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "test:create-prisma-environment": "npm link ./prisma/vitest-environment-prisma",
     "test:install-prisma-environment": "npm link vitest-environment-prisma",
@@ -23,7 +24,8 @@
     "@rocketseat/eslint-config": "1.2.0",
     "@types/bcryptjs": "2.4.2",
     "@types/node": "18.15.11",
-    "@vitest/coverage-c8": "0.30.1",
+    "@vitest/coverage-v8": "2.1.8",
+    "@vitest/ui": "2.1.8",
     "eslint": "8.38.0",
     "npm-run-all": "4.1.5",
     "prisma": "4.13.0",
@@ -32,7 +34,7 @@
     "tsx": "3.12.6",
     "typescript": "5.0.4",
     "vite-tsconfig-paths": "4.2.0",
-    "vitest": "0.30.1"
+    "vitest": "2.1.8"
   },
   "dependencies": {
     "-": "0.0.1",
