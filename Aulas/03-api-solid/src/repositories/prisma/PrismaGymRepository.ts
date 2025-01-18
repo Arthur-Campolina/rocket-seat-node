@@ -1,6 +1,6 @@
 import { Gym, Prisma } from "@prisma/client";
 import { FindNearGymsParams, IGymRepository } from "../IGymRepository";
-import { prisma } from "@/prisma/prisma";
+import { prisma } from "@/prisma_client/prisma";
 
 export class PrismaGymRepository implements IGymRepository {
   async create(data: Prisma.GymCreateInput) {

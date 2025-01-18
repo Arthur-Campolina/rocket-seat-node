@@ -22,15 +22,20 @@ export async function authenticateController(
     });
 
     const token = await reply.jwtSign(
-      {},
+      {
+        role: user.role
+      },
       {
         sign: {
           sub: user.id,
         },
       }
     );
+
     const refreshToken = await reply.jwtSign(
-      {},
+      {
+        role: user.role
+      },
       {
         sign: {
           sub: user.id,
@@ -48,6 +53,7 @@ export async function authenticateController(
       })
       .status(200)
       .send({ token });
+      
   } catch (err) {
     if (err instanceof InvalidCredentialsError) {
       return reply.status(400).send({ message: err.message });

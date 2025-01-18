@@ -20,14 +20,15 @@ export class AuthenticateService {
     password,
   }: AuthenticateServiceRequest): Promise<AuthenticateServiceResponse> {
     const user = await this.userRepository.findByEmail(email);
-    if (!user) {
-      throw new InvalidCredentialsError();
-    }
-
+    
+    if (!user) 
+      throw new InvalidCredentialsError()
+    
     const doesPasswordMatch = await compare(password, user.password);
-    if (!doesPasswordMatch) {
-      throw new InvalidCredentialsError();
-    }
+    
+    if (!doesPasswordMatch) 
+      throw new InvalidCredentialsError()
+    
 
     return {
       user,

@@ -15,10 +15,12 @@ describe("Authenticate Controller (e2e)", () => {
       email: "jhondoe@test.com",
       password: "abc123456",
     });
+
     const response = await request(app.server).post("/sessions").send({
       email: "jhondoe@test.com",
       password: "abc123456",
     });
+    
     expect(response.statusCode).toEqual(200);
     expect(response.body).toEqual({
       token: expect.any(String),

@@ -17,9 +17,12 @@ export class GetUserProfileService {
     id,
   }: AuthenticateServiceRequest): Promise<AuthenticateServiceResponse> {
     const user = await this.userRepository.findById(id);
-    if (!user) {
+    
+    if (!user) 
       throw new ResourceNotFoundError();
-    }
-    return { user };
+    
+    return { 
+      user, 
+    };
   }
 }
